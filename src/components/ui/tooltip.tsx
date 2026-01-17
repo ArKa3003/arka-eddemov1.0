@@ -91,3 +91,28 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentPro
   }
 );
 TooltipContent.displayName = "TooltipContent";
+/**
+ * Simple Tooltip component for basic usage
+ */
+export function Tooltip({
+  children,
+  content,
+  side = "top",
+  delayDuration = 200,
+}: {
+  children: React.ReactNode;
+  content: React.ReactNode;
+  side?: "top" | "right" | "bottom" | "left";
+  delayDuration?: number;
+}) {
+  return (
+    <TooltipProvider delayDuration={delayDuration}>
+      <TooltipRoot>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
+        <TooltipContent side={side} showArrow>
+          {content}
+        </TooltipContent>
+      </TooltipRoot>
+    </TooltipProvider>
+  );
+}
