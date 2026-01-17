@@ -227,7 +227,3 @@ export default function CreateQuizPage() {
 // Metadata
 // ============================================================================
 
-export const metadata = {
-  title: "Create Custom Quiz | ARKA-ED",
-  description: "Build a personalized assessment to practice specific topics",
-};
