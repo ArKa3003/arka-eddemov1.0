@@ -1,24 +1,41 @@
 "use client";
 
-import { useToast } from "@/lib/hooks/use-toast";
-import { Toast } from "@/components/ui/toast";
+import * as React from "react";
+import { Toaster } from "@/components/ui/toaster";
 
-export function ToastProvider({ children }: { children: React.ReactNode }) {
-  const { toasts, dismiss } = useToast();
+// ============================================================================
+// ToastProvider Component
+// ============================================================================
 
+export interface ToastProviderProps {
+  children: React.ReactNode;
+}
+
+/**
+ * Toast notification provider.
+ * Wraps your app to enable toast notifications.
+ *
+ * @example
+ * ```tsx
+ * // In layout.tsx
+ * export default function RootLayout({ children }) {
+ *   return (
+ *     <html>
+ *       <body>
+ *         <ToastProvider>
+ *           {children}
+ *         </ToastProvider>
+ *       </body>
+ *     </html>
+ *   );
+ * }
+ * ```
+ */
+export function ToastProvider({ children }: ToastProviderProps) {
   return (
     <>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 space-y-2">
-        {toasts.map((toast) => (
-          <Toast
-            key={toast.id}
-            title={toast.title}
-            description={toast.description}
-            variant={toast.variant}
-          />
-        ))}
-      </div>
+      <Toaster />
     </>
   );
 }

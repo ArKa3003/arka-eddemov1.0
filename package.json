@@ -6,7 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "echo \"No tests configured\" && exit 0",
+    "prepare": "echo \"Ready for deployment\"",
+    "preinstall": "echo \"Installing dependencies...\"",
+    "postbuild": "echo \"Build complete!\"",
+    "analyze": "ANALYZE=true next build",
+    "clean": "rm -rf .next node_modules",
+    "db:generate": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts",
+    "db:push": "supabase db push",
+    "db:reset": "supabase db reset"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.0",
