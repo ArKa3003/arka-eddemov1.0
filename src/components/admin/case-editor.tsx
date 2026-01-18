@@ -886,7 +886,7 @@ function TagInput({ label, value, onChange, placeholder }: TagInputProps) {
         {value.map((item) => (
           <Badge
             key={item}
-            variant="secondary"
+            variant="default"
             className="bg-slate-700 text-slate-300"
           >
             {item}
@@ -1264,11 +1264,11 @@ function CasePreview({ formData }: CasePreviewProps) {
     <Card className="bg-slate-900 border-slate-800">
       <CardHeader>
         <div className="flex items-center gap-2 mb-2">
-          <Badge variant="secondary" className="bg-slate-700">
+          <Badge variant="default" className="bg-slate-700">
             {formData.category.replace("-", " ")}
           </Badge>
           <Badge
-            variant="secondary"
+            variant="default"
             className={cn(
               formData.difficulty === "beginner" && "bg-emerald-500/20 text-emerald-400",
               formData.difficulty === "intermediate" && "bg-amber-500/20 text-amber-400",
@@ -1278,7 +1278,7 @@ function CasePreview({ formData }: CasePreviewProps) {
             {formData.difficulty}
           </Badge>
           {!formData.isPublished && (
-            <Badge variant="secondary" className="bg-slate-600">
+            <Badge variant="default" className="bg-slate-600">
               Draft
             </Badge>
           )}

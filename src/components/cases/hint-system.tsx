@@ -100,7 +100,7 @@ export function HintSystem({
         <div className="flex items-center gap-2">
           <Lightbulb className="w-5 h-5 text-amber-500" />
           <h4 className="font-semibold text-slate-900">Hints</h4>
-          <Badge variant="secondary" size="sm">
+          <Badge variant="default" size="sm">
             {revealed}/{hintsAvailable}
           </Badge>
         </div>
@@ -258,7 +258,7 @@ export function HintButton({
       {remaining > 0 ? (
         <>
           Hint
-          <Badge variant="secondary" size="sm">
+          <Badge variant="default" size="sm">
             {remaining}
           </Badge>
         </>

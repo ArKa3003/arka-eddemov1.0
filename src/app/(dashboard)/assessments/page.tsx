@@ -115,7 +115,7 @@ async function AssessmentsSection({ searchParams }: AssessmentsSectionProps) {
   }
 
   // Combine published and custom assessments
-  const allAssessments = [
+  const allAssessments: Assessment[] = [
     ...customAssessments,
     ...(assessments || []).filter(
       (a) => !customAssessments.some((c) => c.id === a.id)

@@ -106,7 +106,7 @@ export function SectionHeader({
           )}
         >
           <Badge
-            variant="secondary"
+            variant="default"
             className={cn("px-3 py-1", badgeVariantClasses[badgeVariant])}
           >
             {BadgeIcon && <BadgeIcon className="w-3.5 h-3.5 mr-1.5" />}

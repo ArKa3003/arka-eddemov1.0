@@ -738,7 +738,7 @@ function UserDetailContent({ user }: { user: UserWithStats }) {
               {user.role}
             </Badge>
             {user.specialty_track && (
-              <Badge variant="secondary" className="uppercase">
+              <Badge variant="default" className="uppercase">
                 {user.specialty_track}
               </Badge>
             )}
@@ -788,7 +788,7 @@ function UserDetailContent({ user }: { user: UserWithStats }) {
                 <p className="text-sm text-white">Completed case #{i}</p>
                 <p className="text-xs text-slate-400">{i} day{i > 1 ? "s" : ""} ago</p>
               </div>
-              <Badge variant="secondary" className="bg-emerald-500/20 text-emerald-400">
+              <Badge variant="default" className="bg-emerald-500/20 text-emerald-400">
                 {85 + i}%
               </Badge>
             </div>

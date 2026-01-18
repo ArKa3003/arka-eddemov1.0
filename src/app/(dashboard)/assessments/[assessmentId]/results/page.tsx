@@ -762,7 +762,7 @@ function MissedQuestionsCard({
                         {q.caseTitle}
                       </h4>
                       <div className="flex items-center gap-2">
-                        <Badge size="sm" variant="secondary">
+                        <Badge size="sm" variant="default">
                           {q.category.replace("-", " ")}
                         </Badge>
                         <Badge
@@ -893,7 +893,7 @@ function ImprovementSuggestions({
                 <div>
                   <p className="font-medium text-slate-900 text-sm">{c.title}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge size="sm" variant="secondary">
+                    <Badge size="sm" variant="default">
                       {c.category.replace("-", " ")}
                     </Badge>
                     <Badge

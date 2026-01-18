@@ -149,7 +149,7 @@ export function Hero({
             transition={{ duration: 0.5 }}
           >
             <Badge
-              variant="secondary"
+              variant="default"
               className="mb-6 bg-cyan-500/10 text-cyan-400 border-cyan-500/20 px-4 py-1.5"
             >
               <Sparkles className="w-3.5 h-3.5 mr-2" />

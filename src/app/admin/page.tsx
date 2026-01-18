@@ -464,7 +464,7 @@ function PopularCasesCard({ cases }: PopularCasesCardProps) {
                   {caseItem.attempts} attempts • Avg: {caseItem.avgScore}%
                 </p>
               </div>
-              <Badge variant="secondary" size="sm" className="bg-slate-700 text-slate-300">
+              <Badge variant="default" size="sm" className="bg-slate-700 text-slate-300">
                 {caseItem.category.replace("-", " ")}
               </Badge>
             </div>

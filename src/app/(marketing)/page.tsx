@@ -623,7 +623,7 @@ export default function MarketingPage() {
                   placeholder="Enter your email"
                   className="h-11 flex-1 rounded-md border border-white/20 bg-white/10 px-4 text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-accent-500"
                 />
-                <Button variant="secondary" size="lg">
+                <Button variant="default" size="lg">
                   Get Started
                 </Button>
               </div>

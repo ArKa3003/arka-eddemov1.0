@@ -151,7 +151,7 @@ export function CurriculumModuleCard({
                       </Badge>
                     )}
                     {!isUnlocked && (
-                      <Badge variant="secondary" size="sm">
+                      <Badge variant="default" size="sm">
                         Locked
                       </Badge>
                     )}

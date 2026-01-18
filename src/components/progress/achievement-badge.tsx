@@ -264,7 +264,7 @@ function AchievementModal({
 
           {/* Category Badge */}
           <div className="flex justify-center">
-            <Badge variant="secondary" size="sm">
+            <Badge variant="default" size="sm">
               {ACHIEVEMENT_CATEGORY_LABELS[achievement.category]}
             </Badge>
           </div>

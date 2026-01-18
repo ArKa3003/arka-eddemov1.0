@@ -145,7 +145,7 @@ export function AssessmentCard({
           {/* Custom badge */}
           {assessment.is_custom && (
             <div className="absolute top-3 right-3">
-              <Badge variant="secondary" size="sm">
+              <Badge variant="default" size="sm">
                 <User className="w-3 h-3 mr-1" />
                 Custom
               </Badge>

@@ -216,7 +216,7 @@ export function TrackProgress({
 
               {/* Progress Badge */}
               {module.isUnlocked && !module.isComplete && module.progress > 0 && (
-                <Badge variant="secondary" size="sm">
+                <Badge variant="default" size="sm">
                   {module.progress}%
                 </Badge>
               )}

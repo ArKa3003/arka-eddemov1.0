@@ -155,7 +155,7 @@ export function StreakDisplay({
 
             {/* Freeze Badge */}
             {hasStreakFreeze && freezesRemaining > 0 && (
-              <Badge variant="secondary" size="sm" className="ml-2">
+              <Badge variant="default" size="sm" className="ml-2">
                 <Shield className="w-3 h-3 mr-1" />
                 {freezesRemaining}
               </Badge>

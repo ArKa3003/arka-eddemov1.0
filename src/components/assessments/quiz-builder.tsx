@@ -672,7 +672,7 @@ function Step4Review({ config, categoryCounts, onSave }: Step4ReviewProps) {
             <p className="text-xs text-slate-500 mb-1">Topics</p>
             <div className="flex flex-wrap gap-1">
               {config.categories.map((cat) => (
-                <Badge key={cat} variant="secondary" size="sm">
+                <Badge key={cat} variant="default" size="sm">
                   {CATEGORIES.find((c) => c.value === cat)?.label}
                 </Badge>
               ))}
