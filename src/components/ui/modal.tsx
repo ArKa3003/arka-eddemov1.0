@@ -161,3 +161,73 @@ export const ModalTitle = Dialog.Title;
  * Modal description component.
  */
 export const ModalDescription = Dialog.Description;
+
+/**
+ * Modal header component for consistent header styling.
+ */
+export function ModalHeader({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Modal footer component for action buttons.
+ */
+export function ModalFooter({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ============================================================================
+// Dialog Exports (for shadcn/ui compatibility)
+// ============================================================================
+
+export {
+  // Re-export Radix Dialog primitives
+  Dialog.Root as DialogRoot,
+  Dialog.Trigger as DialogTrigger,
+  Dialog.Close as DialogClose,
+  Dialog.Portal as DialogPortal,
+  Dialog.Overlay as DialogOverlay,
+};
+
+// Export DialogContent as an alias for ModalContent
+export { ModalContent as DialogContent };
+
+// Export DialogTitle as an alias for ModalTitle
+export { ModalTitle as DialogTitle };
+
+// Export DialogDescription as an alias for ModalDescription
+export { ModalDescription as DialogDescription };
+
+// Export DialogHeader as an alias for ModalHeader
+export { ModalHeader as DialogHeader };
+
+// Export DialogFooter as an alias for ModalFooter
+export { ModalFooter as DialogFooter };
+
+// Export Dialog as an alias for Modal (main component)
+export { Modal as Dialog };

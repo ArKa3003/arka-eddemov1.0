@@ -550,7 +550,7 @@ function InProgressScreen({
         <div className="w-[60%] border-r border-slate-200 overflow-y-auto">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <Badge variant="secondary">
+              <Badge variant="default">
                 Case {currentCaseIndex + 1} of {totalCases}
               </Badge>
               <FlagToggle isFlagged={isFlagged} onToggle={onToggleFlag} />
