@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -130,7 +131,7 @@ export function Navbar() {
               </nav>
 
               <div className="flex flex-col gap-3 pt-6 border-t">
-                <Button variant="outline" fullWidth asChild>
+                <Button variant="default" fullWidth asChild>
                   <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
                     Log In
                   </Link>

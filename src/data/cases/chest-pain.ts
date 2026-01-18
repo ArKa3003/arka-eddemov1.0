@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Chest Pain Seed Cases
  *

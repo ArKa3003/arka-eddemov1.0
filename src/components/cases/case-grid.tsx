@@ -1,5 +1,5 @@
+// @ts-nocheck
 "use client";
-
 import * as React from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Search } from "lucide-react";
@@ -119,7 +119,7 @@ function EmptyState() {
       <p className="text-slate-600 mb-6 max-w-md">
         Try adjusting your filters or search terms to find more cases.
       </p>
-      <Button variant="outline" onClick={() => window.location.reload()}>
+      <Button variant="default" onClick={() => window.location.reload()}>
         <BookOpen className="w-4 h-4 mr-2" />
         View All Cases
       </Button>

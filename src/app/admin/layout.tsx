@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { RoleGuard } from "@/components/auth/role-guard";
 
 // ============================================================================

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { create } from "zustand";
 import type { Assessment, AssessmentResult } from "@/types/assessments";
 

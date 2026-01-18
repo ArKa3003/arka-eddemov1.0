@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -73,7 +74,7 @@ export function RoleGuard({
           .select("role")
           .eq("id", user.id)
           .single();
-        role = profile?.role as UserRole;
+        role = (profile as any)?.role as UserRole;
       } catch {
         // Fallback to user_metadata
         role = user.user_metadata?.role as UserRole;

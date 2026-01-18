@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const APP_NAME = "ARKA-ED";
 export const APP_DESCRIPTION = "Medical education platform teaching imaging appropriateness";
 

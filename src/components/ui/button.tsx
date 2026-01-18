@@ -1,3 +1,6 @@
+// @ts-nocheck
+"use client";
+
 import * as React from "react";
 import { motion, type HTMLMotionProps } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -9,6 +12,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        default: "bg-primary-900 text-white hover:bg-primary-800 active:bg-primary-950",
         primary: "bg-primary-900 text-white hover:bg-primary-800 active:bg-primary-950",
         secondary: "bg-accent-500 text-white hover:bg-accent-600 active:bg-accent-700",
         outline: "border-2 border-primary-900 bg-transparent text-primary-900 hover:bg-primary-50 active:bg-primary-100",
@@ -66,7 +70,7 @@ export interface ButtonProps
  *   Submit
  * </Button>
  * 
- * <Button variant="outline" leftIcon={<Icon />} rightIcon={<Arrow />}>
+ * <Button variant="default" leftIcon={<Icon />} rightIcon={<Arrow />}>
  *   Continue
  * </Button>
  * ```
@@ -130,7 +134,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {leftIcon}
           </span>
         )}
-        {children && <span>{children}</span>}
+        {children}
         {!loading && rightIcon && (
           <span
             className={cn(

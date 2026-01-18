@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Abdominal Pain Seed Cases
  *

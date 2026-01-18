@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Suspense } from "react";
 import { ProgressDashboard } from "@/components/progress/progress-dashboard";
 

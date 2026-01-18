@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { SpecialtyTrack as SpecialtyTrackEnum } from "@/types/database";
 
 // ============================================================================

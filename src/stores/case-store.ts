@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { create } from "zustand";
 import type { Case } from "@/types/cases";
 

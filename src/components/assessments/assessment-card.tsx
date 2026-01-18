@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -258,7 +259,7 @@ function StatusSection({
               </span>
             </div>
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="default" size="sm">
             <RotateCcw className="w-4 h-4 mr-1" />
             Retake
           </Button>

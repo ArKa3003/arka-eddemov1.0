@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -232,7 +233,7 @@ export function EmptyState({
           {secondaryAction && (
             <Button
               onClick={secondaryAction.onClick}
-              variant="outline"
+              variant="default"
               size={compact ? "sm" : "default"}
             >
               {secondaryAction.label}

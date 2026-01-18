@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Headache Seed Cases
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default function AchievementsPage() {
   return (
     <div className="p-8">

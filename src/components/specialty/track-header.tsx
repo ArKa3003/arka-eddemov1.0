@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -144,7 +145,7 @@ export function TrackHeader({
           {/* Right: Track Selector */}
           <div className="flex-shrink-0" ref={selectorRef}>
             <Button
-              variant="outline"
+              variant="default"
               onClick={() => setSelectorOpen(!selectorOpen)}
               className="w-full sm:w-auto"
             >

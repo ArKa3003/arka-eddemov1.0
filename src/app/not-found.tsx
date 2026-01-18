@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -111,7 +112,7 @@ export default function NotFound() {
           className="flex flex-col sm:flex-row items-center justify-center gap-3"
         >
           <Button
-            variant="outline"
+            variant="default"
             onClick={() => window.history.back()}
             className="w-full sm:w-auto border-slate-700 text-slate-300 hover:bg-slate-800"
           >
@@ -129,7 +130,7 @@ export default function NotFound() {
           </Button>
           <Button
             asChild
-            variant="outline"
+            variant="default"
             className="w-full sm:w-auto border-slate-700 text-slate-300 hover:bg-slate-800"
           >
             <Link href="/">

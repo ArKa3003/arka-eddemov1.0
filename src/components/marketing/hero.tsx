@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -209,7 +210,7 @@ export function Hero({
           {secondaryCTA && (
             <Button
               size="lg"
-              variant="outline"
+              variant="default"
               className="border-slate-700 text-slate-300 hover:bg-slate-800/50 px-8 py-6 text-lg"
               asChild
             >

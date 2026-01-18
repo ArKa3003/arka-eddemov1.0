@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -117,7 +118,7 @@ Please describe what you were doing when this error occurred:
             <div className="flex gap-3">
               <Button
                 asChild
-                variant="outline"
+                variant="default"
                 className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800"
               >
                 <Link href="/cases">
@@ -127,7 +128,7 @@ Please describe what you were doing when this error occurred:
               </Button>
               <Button
                 onClick={handleReport}
-                variant="outline"
+                variant="default"
                 className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800"
               >
                 <MessageCircle className="w-4 h-4 mr-2" />

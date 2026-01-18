@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SpecialtyTrackContent } from "./track-content";

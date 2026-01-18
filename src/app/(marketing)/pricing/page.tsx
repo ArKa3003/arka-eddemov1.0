@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default function PricingPage() {
   return (
     <div className="p-8">

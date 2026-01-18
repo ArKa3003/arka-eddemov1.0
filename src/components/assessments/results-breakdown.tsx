@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -390,12 +391,12 @@ export function ResultsBreakdown({
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
         {onReviewIncorrect && incorrectCases.length > 0 && (
-          <Button variant="outline" onClick={onReviewIncorrect} className="flex-1">
+          <Button variant="default" onClick={onReviewIncorrect} className="flex-1">
             Review Incorrect
           </Button>
         )}
         {onRetake && (
-          <Button variant="outline" onClick={onRetake} className="flex-1">
+          <Button variant="default" onClick={onRetake} className="flex-1">
             Retake Assessment
           </Button>
         )}

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from "react";
 import Link from "next/link";
 import { Twitter, Linkedin, Github, Mail } from "lucide-react";

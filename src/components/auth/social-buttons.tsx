@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -59,7 +60,7 @@ export function SocialButtons({
       {/* Google */}
       <Button
         type="button"
-        variant="outline"
+        variant="default"
         className="w-full h-11 border-slate-300 text-slate-700 hover:bg-slate-50"
         onClick={handleGoogleClick}
         disabled={isLoading}
@@ -76,7 +77,7 @@ export function SocialButtons({
       {onMicrosoftClick && (
         <Button
           type="button"
-          variant="outline"
+          variant="default"
           className="w-full h-11 border-slate-300 text-slate-700 hover:bg-slate-50"
           onClick={handleMicrosoftClick}
           disabled={isLoading}

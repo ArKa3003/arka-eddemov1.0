@@ -40,13 +40,11 @@ export default function manifest(): MetadataRoute.Manifest {
         src: "/screenshot-desktop.png",
         sizes: "1920x1080",
         type: "image/png",
-        label: "ARKA-ED Desktop View",
       },
       {
         src: "/screenshot-mobile.png",
         sizes: "390x844",
         type: "image/png",
-        label: "ARKA-ED Mobile View",
       },
     ],
   };

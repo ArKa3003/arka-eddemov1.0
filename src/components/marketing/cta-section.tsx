@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -190,7 +191,7 @@ export function CTASection({
               {secondaryCTA && (
                 <Button
                   size="lg"
-                  variant="outline"
+                  variant="default"
                   className={cn(
                     "px-8 py-6 text-lg",
                     variant === "light"

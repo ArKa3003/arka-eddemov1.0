@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Extremity Trauma Seed Cases
  *

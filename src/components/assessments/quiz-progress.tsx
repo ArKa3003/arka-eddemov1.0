@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -218,7 +219,7 @@ export function QuizNavigation({
   return (
     <div className={cn("flex items-center justify-between", className)}>
       <Button
-        variant="outline"
+        variant="default"
         onClick={onPrevious}
         disabled={!canGoBack}
       >

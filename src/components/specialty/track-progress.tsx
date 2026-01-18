@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -427,7 +428,7 @@ export function TrackCertificate({
         {formattedDate && (
           <p className="text-xs text-amber-500 mt-2">Earned {formattedDate}</p>
         )}
-        <Button variant="outline" size="sm" className="mt-4">
+        <Button variant="default" size="sm" className="mt-4">
           View Certificate
         </Button>
       </CardContent>

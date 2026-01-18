@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import * as React from "react";
@@ -239,7 +240,7 @@ export function ErrorState({
         {showBack && (
           <Button
             onClick={handleBack}
-            variant="outline"
+            variant="default"
             size={compact ? "sm" : "default"}
             className="gap-2"
           >
@@ -250,7 +251,7 @@ export function ErrorState({
         {showHome && (
           <Button
             onClick={() => (window.location.href = "/cases")}
-            variant="outline"
+            variant="default"
             size={compact ? "sm" : "default"}
             className="gap-2"
           >

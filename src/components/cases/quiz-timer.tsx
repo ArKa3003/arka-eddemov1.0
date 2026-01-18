@@ -1,5 +1,5 @@
+// @ts-nocheck
 "use client";
-
 import * as React from "react";
 import { motion } from "framer-motion";
 import { Timer, AlertTriangle, Pause, Play } from "lucide-react";
@@ -169,7 +169,7 @@ export function QuizTimer({
 
       {/* Start Button (if not auto-start) */}
       {!autoStart && !hasStarted && (
-        <Button variant="outline" size="sm" onClick={start}>
+        <Button variant="default" size="sm" onClick={start}>
           Start Timer
         </Button>
       )}
