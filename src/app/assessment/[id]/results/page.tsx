@@ -128,16 +128,17 @@ export default function AssessmentResultsPage() {
         // Fetch cases
         const supabase = createClient();
         const caseIds = Array.from(answersMap.keys());
-        const { data: casesData } = await supabase
+        const { data } = await supabase
           .from("cases")
           .select("*")
           .in("id", caseIds);
 
-        if (!casesData) {
+        if (!data) {
           router.push("/assessment");
           return;
         }
 
+        const casesData: Case[] = data;
         setCases(casesData);
 
         // Fetch imaging options
