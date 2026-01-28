@@ -1,5 +1,8 @@
 // @ts-nocheck
+"use client";
+
 import * as React from "react";
+import { motion } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -69,10 +72,15 @@ export interface CardProps
  */
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, accent, padding, ...props }, ref) => {
+    const isInteractive = variant === "interactive";
+    
     return (
-      <div
+      <motion.div
         ref={ref}
         className={cn(cardVariants({ variant, accent }), paddingVariants({ padding }), className)}
+        whileHover={isInteractive ? { y: -4, scale: 1.01 } : undefined}
+        whileTap={isInteractive ? { scale: 0.98 } : undefined}
+        transition={{ duration: 0.2, ease: "easeOut" }}
         {...props}
       />
     );

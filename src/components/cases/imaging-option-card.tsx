@@ -191,10 +191,10 @@ export function ImagingOptionCard({
         ) : (
           // Default variant
           <div className="flex items-start gap-3">
-            {/* Checkbox */}
+            {/* Radio Button */}
             <div
               className={cn(
-                "w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors",
+                "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors",
                 isSelected
                   ? "bg-cyan-500 border-cyan-500"
                   : "border-slate-300"
@@ -205,9 +205,8 @@ export function ImagingOptionCard({
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                >
-                  <Check className="w-3.5 h-3.5 text-white" />
-                </motion.div>
+                  className="w-2.5 h-2.5 rounded-full bg-white"
+                />
               )}
             </div>
 

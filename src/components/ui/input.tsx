@@ -1,5 +1,8 @@
 // @ts-nocheck
+"use client";
+
 import * as React from "react";
+import { motion } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -113,7 +116,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               {leftIcon}
             </div>
           )}
-          <input
+          <motion.input
             id={inputId}
             ref={ref}
             type="text"
@@ -121,12 +124,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               inputVariants({ variant, size, error: !!error }),
               leftIcon && "pl-9",
               rightIcon && "pr-9",
+              "transition-all duration-200",
               className
             )}
             disabled={disabled}
             aria-invalid={!!error}
             aria-describedby={error ? errorId : helperText ? helperId : undefined}
             aria-required={required}
+            whileFocus={{ scale: 1.01 }}
+            transition={{ duration: 0.2 }}
             {...props}
           />
           {rightIcon && (

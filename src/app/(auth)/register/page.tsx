@@ -19,6 +19,7 @@ import {
 import { SocialButtons } from "@/components/auth/social-buttons";
 import { useAuth } from "@/providers/auth-provider";
 import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 /**
  * Password requirements
@@ -103,9 +104,14 @@ export default function RegisterPage() {
 
     try {
       await signUp(data.email, data.password);
+      toast.success("Account created successfully!", {
+        icon: "🎉",
+      });
       router.push("/onboarding");
     } catch (err: any) {
-      setError(err.message || "Registration failed. Please try again.");
+      const errorMessage = err.message || "Registration failed. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

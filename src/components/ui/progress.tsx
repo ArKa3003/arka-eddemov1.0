@@ -2,6 +2,7 @@
 "use client";
 
 import * as React from "react";
+import { motion } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -85,12 +86,14 @@ export function LinearProgress({
           color === "danger" && "[&>div]:bg-inappropriate-500"
         )}
       >
-        <div
+        <motion.div
           className={cn(
-            "h-full transition-all duration-500 ease-out",
+            "h-full",
             linearProgressVariants({ color })
           )}
-          style={{ width: `${percentage}%` }}
+          initial={{ width: 0 }}
+          animate={{ width: `${percentage}%` }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           role="progressbar"
           aria-valuenow={value}
           aria-valuemin={0}

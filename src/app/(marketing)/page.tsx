@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import {
@@ -16,10 +16,14 @@ import {
   Route,
   BarChart3,
   Award,
+  Menu,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { DemoModal } from "@/components/DemoModal";
+import { Footer } from "@/components/layout/footer";
 import { cn } from "@/lib/utils";
 
 function useCountUp(target: number, isVisible: boolean, duration = 1200) {
@@ -96,12 +100,24 @@ function SectionBadge({
 }
 
 export default function MarketingPage() {
+  const [showDemo, setShowDemo] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { stiffness: 80, damping: 20 });
   const smoothY = useSpring(mouseY, { stiffness: 80, damping: 20 });
   const parallaxX = useTransform(smoothX, [0, 1], [-12, 12]);
   const parallaxY = useTransform(smoothY, [0, 1], [-10, 10]);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -115,10 +131,143 @@ export default function MarketingPage() {
 
   return (
     <div className="bg-primary-900 text-white">
-      {/* Hero */}
+      {/* Navigation Bar (sticky) */}
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 border-b transition-all",
+          isScrolled
+            ? "glass-dark border-b-white/10 bg-primary-900/80 backdrop-blur-md"
+            : "bg-primary-900/95"
+        )}
+      >
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-1">
+              <span className="text-2xl font-bold text-accent-500">ARKA</span>
+              <span className="text-2xl font-bold text-white">-ED</span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-8">
+              <Link
+                href="#how-it-works"
+                className="text-sm font-medium text-white/80 hover:text-accent-300 transition-colors"
+              >
+                How It Works
+              </Link>
+              <Link
+                href="#features"
+                className="text-sm font-medium text-white/80 hover:text-accent-300 transition-colors"
+              >
+                Features
+              </Link>
+              <Link
+                href="#pricing"
+                className="text-sm font-medium text-white/80 hover:text-accent-300 transition-colors"
+              >
+                Pricing
+              </Link>
+            </div>
+
+            {/* Desktop Auth Buttons */}
+            <div className="hidden md:flex items-center gap-3">
+              <Button variant="ghost" size="sm" asChild className="text-white hover:bg-white/10">
+                <Link href="/login">Log In</Link>
+              </Button>
+              <Button variant="secondary" size="sm" asChild>
+                <Link href="/register">Get Started</Link>
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2 text-white"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Drawer */}
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-primary-900 border-l border-white/10 shadow-xl md:hidden"
+          >
+            <div className="flex flex-col h-full p-6">
+              <div className="flex items-center justify-between mb-8">
+                <Link href="/" className="flex items-center space-x-1" onClick={() => setIsMobileMenuOpen(false)}>
+                  <span className="text-2xl font-bold text-accent-500">ARKA</span>
+                  <span className="text-2xl font-bold text-white">-ED</span>
+                </Link>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 text-white"
+                  aria-label="Close menu"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <nav className="flex flex-col gap-4 flex-1">
+                <Link
+                  href="#how-it-works"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base font-medium text-white/80 hover:text-accent-300 transition-colors py-2"
+                >
+                  How It Works
+                </Link>
+                <Link
+                  href="#features"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base font-medium text-white/80 hover:text-accent-300 transition-colors py-2"
+                >
+                  Features
+                </Link>
+                <Link
+                  href="#pricing"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base font-medium text-white/80 hover:text-accent-300 transition-colors py-2"
+                >
+                  Pricing
+                </Link>
+              </nav>
+
+              <div className="flex flex-col gap-3 pt-6 border-t border-white/10">
+                <Button variant="outline" fullWidth asChild className="text-white border-white/20 hover:bg-white/10">
+                  <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                    Log In
+                  </Link>
+                </Button>
+                <Button variant="secondary" fullWidth asChild>
+                  <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                    Get Started
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </motion.nav>
+
+      {/* Hero Section */}
       <section
-        className="relative overflow-hidden"
+        id="main-content"
+        className="relative overflow-hidden pt-24 sm:pt-28"
         onMouseMove={handleMouseMove}
+        aria-label="Hero section"
       >
         <motion.div
           className="absolute inset-0 opacity-60"
@@ -129,18 +278,19 @@ export default function MarketingPage() {
               "radial-gradient(circle at top left, rgba(6,182,212,0.25), transparent 55%), radial-gradient(circle at 20% 30%, rgba(148,163,184,0.2), transparent 60%), radial-gradient(circle at 80% 40%, rgba(6,182,212,0.15), transparent 55%), radial-gradient(circle at bottom right, rgba(15,23,42,0.9), transparent 70%)",
             backgroundSize: "200% 200%",
           }}
+          aria-hidden="true"
         />
 
-        <div className="relative mx-auto flex min-h-[90vh] w-full max-w-6xl flex-col gap-12 px-6 pb-24 pt-24 lg:flex-row lg:items-center">
-          <div className="flex-1">
+        <div className="relative mx-auto flex min-h-[90vh] w-full max-w-6xl flex-col gap-8 sm:gap-12 px-4 sm:px-6 pb-16 sm:pb-24 pt-16 sm:pt-24 lg:flex-row lg:items-center">
+          <div className="flex-1 text-center lg:text-left">
             <SectionBadge>The Future of Medical Education</SectionBadge>
 
-            <h1 className="mt-6 text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl">
+            <h1 className="mt-4 sm:mt-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
               {headlineWords.map((word, index) => (
                 <motion.span
                   key={word}
                   className={cn(
-                    "mr-2 inline-block",
+                    "mr-1 sm:mr-2 inline-block",
                     word === "Appropriateness" &&
                       "bg-gradient-to-r from-accent-400 via-accent-500 to-accent-300 bg-clip-text text-transparent"
                   )}
@@ -153,23 +303,29 @@ export default function MarketingPage() {
               ))}
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg text-white/70">
+            <p className="mt-4 sm:mt-6 max-w-xl mx-auto lg:mx-0 text-base sm:text-lg text-white/70">
               The first interactive platform teaching physicians when to order
-              imaging — not just how to read it.
+              imaging — powered by AIIE
             </p>
 
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <Button variant="primary" size="lg" className="px-6">
-                Start Learning Free
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+              <Button variant="secondary" size="lg" className="px-6 touch-target w-full sm:w-auto" asChild>
+                <Link href="/register" aria-label="Start learning for free">Start Learning Free</Link>
               </Button>
-              <Button variant="default" size="lg" className="px-6 text-white">
-                <Play className="mr-2 h-5 w-5" />
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-6 text-white border-white/20 hover:bg-white/10 touch-target w-full sm:w-auto"
+                onClick={() => setShowDemo(true)}
+                aria-label="Watch demo video"
+              >
+                <Play className="mr-2 h-5 w-5" aria-hidden="true" />
                 Watch Demo
               </Button>
             </div>
 
-            <div className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-3">
-              <AnimatedStat label="ACR Knowledge Gap" value={97} suffix="%" />
+            <div className="mt-8 sm:mt-12 grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
+              <AnimatedStat label="AIIE Knowledge Gap" value={30} suffix="%" />
               <AnimatedStat label="Annual Waste" value={100} suffix="B+" />
               <AnimatedStat label="Clinical Cases" value={50} suffix="+" />
             </div>
@@ -177,55 +333,57 @@ export default function MarketingPage() {
 
           {/* Mockup */}
           <motion.div
-            className="relative flex-1"
+            className="relative flex-1 mt-8 lg:mt-0"
             style={{ x: parallaxX, y: parallaxY }}
           >
             <motion.div
-              className="absolute -top-6 left-8 h-28 w-28 rounded-full bg-accent-500/20 blur-2xl"
+              className="absolute -top-6 left-4 sm:left-8 h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-accent-500/20 blur-2xl"
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 6, repeat: Infinity }}
+              aria-hidden="true"
             />
             <motion.div
-              className="absolute bottom-4 right-10 h-20 w-20 rounded-full bg-accent-500/20 blur-2xl"
+              className="absolute bottom-4 right-4 sm:right-10 h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-accent-500/20 blur-2xl"
               animate={{ y: [0, -12, 0] }}
               transition={{ duration: 7, repeat: Infinity }}
+              aria-hidden="true"
             />
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="h-3 w-3 rounded-full bg-accent-500" />
-                <div className="h-3 w-3 rounded-full bg-white/30" />
-                <div className="h-3 w-3 rounded-full bg-white/30" />
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 shadow-2xl backdrop-blur">
+              <div className="mb-4 flex items-center gap-2 sm:gap-3">
+                <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-accent-500" aria-hidden="true" />
+                <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-white/30" aria-hidden="true" />
+                <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-white/30" aria-hidden="true" />
                 <span className="ml-auto text-xs text-white/50">
                   Case Interface Preview
                 </span>
               </div>
-              <div className="space-y-4">
-                <div className="rounded-lg border border-white/10 bg-white/10 p-4">
-                  <p className="text-sm uppercase text-white/50">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="rounded-lg border border-white/10 bg-white/10 p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm uppercase text-white/50">
                     Chief Complaint
                   </p>
-                  <p className="mt-2 text-lg font-semibold">
+                  <p className="mt-2 text-base sm:text-lg font-semibold">
                     Sudden severe headache
                   </p>
                 </div>
-                <div className="rounded-lg border border-white/10 bg-white/10 p-4">
-                  <p className="text-sm uppercase text-white/50">
+                <div className="rounded-lg border border-white/10 bg-white/10 p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm uppercase text-white/50">
                     Recommended Imaging
                   </p>
-                  <p className="mt-2 text-lg font-semibold text-accent-300">
+                  <p className="mt-2 text-base sm:text-lg font-semibold text-accent-300">
                     CT Head without contrast
                   </p>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="rounded-lg border border-white/10 bg-white/10 p-4">
-                    <p className="text-xs text-white/50">ACR Rating</p>
-                    <p className="mt-2 text-2xl font-semibold text-appropriate-400">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="rounded-lg border border-white/10 bg-white/10 p-3 sm:p-4">
+                    <p className="text-xs text-white/50">AIIE Rating</p>
+                    <p className="mt-2 text-xl sm:text-2xl font-semibold text-appropriate-400">
                       8
                     </p>
                   </div>
-                  <div className="rounded-lg border border-white/10 bg-white/10 p-4">
+                  <div className="rounded-lg border border-white/10 bg-white/10 p-3 sm:p-4">
                     <p className="text-xs text-white/50">Radiation</p>
-                    <p className="mt-2 text-2xl font-semibold text-white/80">
+                    <p className="mt-2 text-xl sm:text-2xl font-semibold text-white/80">
                       2.1 mSv
                     </p>
                   </div>
@@ -237,7 +395,7 @@ export default function MarketingPage() {
       </section>
 
       {/* Problem Section */}
-      <section className="bg-white text-primary-900">
+      <section id="problem" className="bg-white text-primary-900">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="max-w-3xl">
             <SectionBadge variant="danger">The Problem</SectionBadge>
@@ -278,13 +436,13 @@ export default function MarketingPage() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               {
-                stat: "2.4%",
-                label: "Use ACR Criteria",
+                stat: "30%",
+                label: "AIIE Knowledge Gap",
                 source: "National survey of residents",
               },
               {
                 stat: "50%+",
-                label: "Unfamiliar with ACR",
+                label: "Unfamiliar with AIIE",
                 source: "Residency program report",
               },
               {
@@ -313,8 +471,8 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="bg-primary-950 text-white">
+      {/* How It Works Section */}
+      <section id="how-it-works" className="bg-primary-950 text-white">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="text-center">
             <SectionBadge>How It Works</SectionBadge>
@@ -332,12 +490,12 @@ export default function MarketingPage() {
               },
               {
                 title: "Order Imaging",
-                description: "Select the right modality in context.",
+                description: "Select the right modality.",
                 icon: MousePointer2,
               },
               {
-                title: "Get Instant Feedback",
-                description: "See ACR-based ratings immediately.",
+                title: "Get AIIE Feedback",
+                description: "See evidence-based ratings instantly.",
                 icon: CheckCircle2,
               },
               {
@@ -370,17 +528,17 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="bg-white text-primary-900">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      {/* Features Section */}
+      <section id="features" className="bg-white text-primary-900" aria-labelledby="features-heading">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-20">
           <div className="text-center">
             <SectionBadge>Features</SectionBadge>
-            <h2 className="mt-4 text-3xl font-semibold md:text-4xl">
+            <h2 id="features-heading" className="mt-4 text-2xl sm:text-3xl font-semibold md:text-4xl">
               Built for ordering physicians
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 sm:mt-12 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 title: "50+ Clinical Cases",
@@ -389,8 +547,8 @@ export default function MarketingPage() {
                 color: "text-accent-500",
               },
               {
-                title: "ACR Criteria Integration",
-                description: "Instant ACR ratings with evidence-based guidance.",
+                title: "AIIE Integration",
+                description: "Instant AIIE ratings with evidence-based guidance.",
                 icon: Target,
                 color: "text-appropriate-500",
               },
@@ -445,7 +603,7 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Testimonials Section */}
       <section className="bg-primary-950 text-white">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="text-center">
@@ -469,7 +627,7 @@ export default function MarketingPage() {
             {[
               {
                 quote:
-                  "ARKA-ED finally connects ordering decisions to ACR criteria in a way residents actually retain.",
+                  "ARKA-ED finally connects ordering decisions to AIIE criteria in a way residents actually retain.",
                 name: "Dr. Emily Chen",
                 role: "EM Program Director",
               },
@@ -492,7 +650,7 @@ export default function MarketingPage() {
                 className="rounded-xl border border-white/10 bg-white/5 p-6"
               >
                 <p className="text-sm text-white/80">
-                  “{testimonial.quote}”
+                  "{testimonial.quote}"
                 </p>
                 <div className="mt-6 flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-accent-500/30" />
@@ -511,17 +669,17 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="bg-white text-primary-900">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      {/* Pricing Section */}
+      <section id="pricing" className="bg-white text-primary-900" aria-labelledby="pricing-heading">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-20">
           <div className="text-center">
             <SectionBadge>Pricing</SectionBadge>
-            <h2 className="mt-4 text-3xl font-semibold md:text-4xl">
+            <h2 id="pricing-heading" className="mt-4 text-2xl sm:text-3xl font-semibold md:text-4xl">
               Choose the right plan
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          <div className="mt-8 sm:mt-12 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 name: "Free",
@@ -534,6 +692,7 @@ export default function MarketingPage() {
                   "Community support",
                 ],
                 cta: "Get Started Free",
+                ctaLink: "/register?plan=free",
                 highlight: false,
               },
               {
@@ -548,6 +707,7 @@ export default function MarketingPage() {
                   "Achievements",
                 ],
                 cta: "Start 7-Day Free Trial",
+                ctaLink: "/register?plan=pro",
                 highlight: true,
                 sub: "$99/yr",
               },
@@ -563,6 +723,7 @@ export default function MarketingPage() {
                   "Custom assessments",
                 ],
                 cta: "Contact Sales",
+                ctaLink: "mailto:sales@arka-ed.com",
                 highlight: false,
               },
             ].map((tier) => (
@@ -594,12 +755,24 @@ export default function MarketingPage() {
                     </li>
                   ))}
                 </ul>
-                <Button
-                  variant={tier.highlight ? "secondary" : "primary"}
-                  className="mt-8 w-full"
-                >
-                  {tier.cta}
-                </Button>
+                {tier.ctaLink.startsWith("mailto:") ? (
+                  <a href={tier.ctaLink}>
+                    <Button
+                      variant={tier.highlight ? "secondary" : "primary"}
+                      className="mt-8 w-full"
+                    >
+                      {tier.cta}
+                    </Button>
+                  </a>
+                ) : (
+                  <Button
+                    variant={tier.highlight ? "secondary" : "primary"}
+                    className="mt-8 w-full"
+                    asChild
+                  >
+                    <Link href={tier.ctaLink}>{tier.cta}</Link>
+                  </Button>
+                )}
               </motion.div>
             ))}
           </div>
@@ -618,14 +791,9 @@ export default function MarketingPage() {
                 Join the growing community of clinicians mastering imaging
                 appropriateness.
               </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="h-11 flex-1 rounded-md border border-white/20 bg-white/10 px-4 text-sm text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-accent-500"
-                />
-                <Button variant="primary" size="lg">
-                  Get Started
+              <div className="mt-6">
+                <Button variant="secondary" size="lg" asChild>
+                  <Link href="/register">Get Started</Link>
                 </Button>
               </div>
               <div className="mt-6 flex items-center gap-3">
@@ -645,6 +813,12 @@ export default function MarketingPage() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Demo Modal */}
+      <DemoModal isOpen={showDemo} onClose={() => setShowDemo(false)} />
     </div>
   );
 }

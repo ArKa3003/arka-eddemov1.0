@@ -35,6 +35,8 @@ import {
   type CaseResult,
 } from "@/components/assessments/results-breakdown";
 import { cn } from "@/lib/utils";
+import { showAssessmentCompletionToast } from "@/lib/utils/achievement-toast";
+import toast from "react-hot-toast";
 
 // ============================================================================
 // Types
@@ -311,6 +313,19 @@ export default function AssessmentPage({
     setTimerRunning(false);
     setShowTimeUpModal(false);
     setState("completed");
+    
+    // Calculate results for toast
+    const answeredCount = Array.from(answers.values()).filter(
+      (a) => a.selectedImaging.length > 0
+    ).length;
+    const totalCases = MOCK_ASSESSMENT.case_ids.length;
+    const mockScore = Math.round((answeredCount / totalCases) * 100);
+    const passed = mockScore >= MOCK_ASSESSMENT.passing_score;
+    
+    // Show toast notification
+    setTimeout(() => {
+      showAssessmentCompletionToast(mockScore, passed, totalCases, answeredCount);
+    }, 500);
   };
 
   // Render based on state

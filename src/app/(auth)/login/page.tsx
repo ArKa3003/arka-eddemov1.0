@@ -20,6 +20,7 @@ import {
 import { SocialButtons } from "@/components/auth/social-buttons";
 import { useAuth } from "@/providers/auth-provider";
 import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 /**
  * Login form validation schema
@@ -65,9 +66,14 @@ export default function LoginPage() {
 
     try {
       await signIn(data.email, data.password);
+      toast.success("Welcome back!", {
+        icon: "👋",
+      });
       router.push(redirectTo);
     } catch (err: any) {
-      setError(err.message || "Invalid email or password. Please try again.");
+      const errorMessage = err.message || "Invalid email or password. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

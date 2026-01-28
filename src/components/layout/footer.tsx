@@ -1,7 +1,10 @@
-// @ts-nocheck
+"use client";
+
 import * as React from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Twitter, Linkedin, Github, Mail } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Twitter, Linkedin, Github, Mail, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const footerLinks = {
@@ -40,6 +43,7 @@ const socialLinks = [
 
 /**
  * Marketing footer component with logo, links, social icons, and copyright.
+ * Features accordion sections on mobile for better UX.
  * 
  * @example
  * ```tsx
@@ -47,13 +51,100 @@ const socialLinks = [
  * ```
  */
 export function Footer() {
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
+
+  // Check for reduced motion preference
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setIsReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  const toggleSection = (section: string) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  const FooterSection = ({
+    title,
+    links,
+    sectionKey,
+  }: {
+    title: string;
+    links: typeof footerLinks.product;
+    sectionKey: string;
+  }) => {
+    const isOpen = openSections[sectionKey];
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
+    return (
+      <div>
+        {/* Mobile: Accordion Header */}
+        <button
+          onClick={() => toggleSection(sectionKey)}
+          className="md:hidden w-full flex items-center justify-between py-3 text-sm font-semibold focus-visible-ring rounded-md"
+          aria-expanded={isOpen}
+          aria-controls={`footer-section-${sectionKey}`}
+        >
+          <span>{title}</span>
+          {isOpen ? (
+            <ChevronUp className="h-4 w-4" aria-hidden="true" />
+          ) : (
+            <ChevronDown className="h-4 w-4" aria-hidden="true" />
+          )}
+        </button>
+
+        {/* Desktop: Static Header */}
+        <h3 className="hidden md:block text-sm font-semibold mb-4">{title}</h3>
+
+        {/* Links */}
+        <AnimatePresence>
+          {(isOpen || !isMobile) && (
+            <motion.ul
+              id={`footer-section-${sectionKey}`}
+              initial={isMobile ? { height: 0, opacity: 0 } : false}
+              animate={isMobile ? { height: "auto", opacity: 1 } : false}
+              exit={isMobile ? { height: 0, opacity: 0 } : false}
+              transition={{
+                duration: isReducedMotion ? 0.1 : 0.3,
+                ease: "easeInOut",
+              }}
+              className="space-y-3 overflow-hidden"
+            >
+              {links.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible-ring rounded-md px-1 py-1 inline-block touch-target"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </motion.ul>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
   return (
-    <footer className="border-t bg-background mt-auto">
-      <div className="container mx-auto px-4 py-12 lg:py-16">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-6">
+    <footer className="border-t bg-background mt-auto" role="contentinfo">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-6">
           {/* Logo and Tagline */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-1 mb-4">
+            <Link
+              href="/"
+              className="flex items-center gap-1 mb-4 focus-visible-ring rounded-md p-1 inline-block"
+              aria-label="ARKA-ED Home"
+            >
               <span className="text-2xl font-bold text-accent-500">ARKA</span>
               <span className="text-2xl font-bold text-primary-900">-ED</span>
             </Link>
@@ -68,10 +159,10 @@ export function Footer() {
                   <Link
                     key={social.label}
                     href={social.href}
-                    className="text-muted-foreground hover:text-accent-500 transition-colors"
+                    className="text-muted-foreground hover:text-accent-500 transition-colors focus-visible-ring rounded-md p-2 touch-target"
                     aria-label={social.label}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-5 w-5" aria-hidden="true" />
                   </Link>
                 );
               })}
@@ -79,78 +170,25 @@ export function Footer() {
           </div>
 
           {/* Product Links */}
-          <div>
-            <h3 className="text-sm font-semibold mb-4">Product</h3>
-            <ul className="space-y-3">
-              {footerLinks.product.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterSection title="Product" links={footerLinks.product} sectionKey="product" />
 
           {/* Resources Links */}
-          <div>
-            <h3 className="text-sm font-semibold mb-4">Resources</h3>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterSection title="Resources" links={footerLinks.resources} sectionKey="resources" />
 
           {/* Company Links */}
-          <div>
-            <h3 className="text-sm font-semibold mb-4">Company</h3>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterSection title="Company" links={footerLinks.company} sectionKey="company" />
 
           {/* Legal Links */}
-          <div>
-            <h3 className="text-sm font-semibold mb-4">Legal</h3>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterSection title="Legal" links={footerLinks.legal} sectionKey="legal" />
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t">
+        <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t">
           <p className="text-sm text-center text-muted-foreground">
-            &copy; {new Date().getFullYear()} ARKA-ED. All rights reserved.
+            &copy; 2026 ARKA Health Technologies
+          </p>
+          <p className="text-xs text-center text-muted-foreground mt-2">
+            AIIE v2.0 | RAND/UCLA + GRADE Methodology
           </p>
         </div>
       </div>

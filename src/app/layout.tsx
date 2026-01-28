@@ -2,8 +2,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/providers/auth-provider";
-import { ToastProvider } from "@/providers/toast-provider";
+import { Providers } from "@/app/providers";
 
 // ============================================================================
 // Fonts
@@ -230,11 +229,13 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <AuthProvider>
-          <ToastProvider>
-            {children}
-          </ToastProvider>
-        </AuthProvider>
+        {/* Skip to content link for accessibility */}
+        <a href="#main-content" className="skip-to-content">
+          Skip to main content
+        </a>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

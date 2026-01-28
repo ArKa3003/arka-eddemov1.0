@@ -32,6 +32,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LinearProgress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
 // ============================================================================
 // Types
@@ -132,6 +149,26 @@ const MOCK_SYSTEM_HEALTH = {
   uptime: 99.98,
 };
 
+// Chart data
+const USER_SIGNUP_DATA = Array.from({ length: 30 }, (_, i) => ({
+  date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0]
+    .slice(5),
+  signups: Math.floor(Math.random() * 15) + 5,
+}));
+
+const DAILY_ACTIVE_USERS = Array.from({ length: 7 }, (_, i) => ({
+  day: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i],
+  active: Math.floor(Math.random() * 50) + 60,
+}));
+
+const ASSESSMENT_COMPLETION_DATA = [
+  { name: "Completed", value: 342, color: "#10b981" },
+  { name: "In Progress", value: 89, color: "#f59e0b" },
+  { name: "Not Started", value: 156, color: "#64748b" },
+];
+
 // ============================================================================
 // Page Component
 // ============================================================================
@@ -199,12 +236,19 @@ export default function AdminDashboardPage() {
         {/* Quick Actions */}
         <QuickActions />
 
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <UserSignupsChart data={USER_SIGNUP_DATA} />
+          <DailyActiveUsersChart data={DAILY_ACTIVE_USERS} />
+        </div>
+
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Activity & Popular Cases */}
           <div className="lg:col-span-2 space-y-6">
             <RecentActivityCard activities={MOCK_ACTIVITIES} />
             <PopularCasesCard cases={MOCK_POPULAR_CASES} />
+            <AssessmentCompletionChart data={ASSESSMENT_COMPLETION_DATA} />
           </div>
 
           {/* Right: System Health & User Stats */}
@@ -601,6 +645,174 @@ function UserBreakdownCard({ daily, weekly, monthly, total }: UserBreakdownCardP
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-400">Total Registered</span>
             <span className="text-sm font-bold text-white">{total.toLocaleString()}</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ============================================================================
+// User Signups Chart
+// ============================================================================
+
+interface UserSignupsChartProps {
+  data: Array<{ date: string; signups: number }>;
+}
+
+function UserSignupsChart({ data }: UserSignupsChartProps) {
+  return (
+    <Card className="bg-slate-900 border-slate-800">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base text-white flex items-center gap-2">
+          <UserPlus className="w-4 h-4 text-slate-400" />
+          User Signups Over Time
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <ResponsiveContainer width="100%" height={250}>
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="signupGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+            <XAxis
+              dataKey="date"
+              tick={{ fill: "#94a3b8", fontSize: 12 }}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fill: "#94a3b8", fontSize: 12 }}
+              tickLine={false}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#1e293b",
+                border: "1px solid #334155",
+                borderRadius: "8px",
+                color: "#fff",
+              }}
+            />
+            <Area
+              type="monotone"
+              dataKey="signups"
+              stroke="#06b6d4"
+              strokeWidth={2}
+              fill="url(#signupGradient)"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ============================================================================
+// Daily Active Users Chart
+// ============================================================================
+
+interface DailyActiveUsersChartProps {
+  data: Array<{ day: string; active: number }>;
+}
+
+function DailyActiveUsersChart({ data }: DailyActiveUsersChartProps) {
+  return (
+    <Card className="bg-slate-900 border-slate-800">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base text-white flex items-center gap-2">
+          <Activity className="w-4 h-4 text-slate-400" />
+          Daily Active Users
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+            <XAxis
+              dataKey="day"
+              tick={{ fill: "#94a3b8", fontSize: 12 }}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fill: "#94a3b8", fontSize: 12 }}
+              tickLine={false}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#1e293b",
+                border: "1px solid #334155",
+                borderRadius: "8px",
+                color: "#fff",
+              }}
+            />
+            <Bar dataKey="active" fill="#10b981" radius={[8, 8, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ============================================================================
+// Assessment Completion Chart
+// ============================================================================
+
+interface AssessmentCompletionChartProps {
+  data: Array<{ name: string; value: number; color: string }>;
+}
+
+function AssessmentCompletionChart({ data }: AssessmentCompletionChartProps) {
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+
+  return (
+    <Card className="bg-slate-900 border-slate-800">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base text-white flex items-center gap-2">
+          <ClipboardList className="w-4 h-4 text-slate-400" />
+          Assessment Completion Rates
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="flex items-center gap-8">
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) =>
+                  `${name}: ${(percent * 100).toFixed(0)}%`
+                }
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="space-y-3">
+            {data.map((item) => (
+              <div key={item.name} className="flex items-center gap-3">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+                <div>
+                  <p className="text-sm text-white font-medium">{item.name}</p>
+                  <p className="text-xs text-slate-400">
+                    {item.value} ({((item.value / total) * 100).toFixed(1)}%)
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </CardContent>
