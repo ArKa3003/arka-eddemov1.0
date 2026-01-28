@@ -122,7 +122,7 @@ export default function AssessmentResultsPage() {
         }
 
         const parsed = JSON.parse(savedData);
-        const answersMap = new Map(parsed.answers);
+        const answersMap = new Map<string, any>(parsed.answers);
         setAnswers(answersMap);
 
         // Fetch cases
