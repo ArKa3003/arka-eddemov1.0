@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/providers/auth-provider";
+import { useAuth } from "@/context/AuthContext";
 
 export interface DashboardHeaderProps {
   /**
@@ -47,7 +47,7 @@ export function DashboardHeader({
   breadcrumbs,
 }: DashboardHeaderProps) {
   const pathname = usePathname();
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const [notifications, setNotifications] = React.useState(3); // Mock notification count
 
   // Generate breadcrumbs from pathname if not provided
@@ -191,7 +191,7 @@ export function DashboardHeader({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()}>
+              <DropdownMenuItem onClick={() => logout()}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>

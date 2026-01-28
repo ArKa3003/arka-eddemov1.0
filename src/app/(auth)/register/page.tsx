@@ -17,7 +17,7 @@ import {
   AuthError,
 } from "@/components/auth/auth-form";
 import { SocialButtons } from "@/components/auth/social-buttons";
-import { useAuth } from "@/providers/auth-provider";
+import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 
@@ -65,7 +65,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
  */
 export default function RegisterPage() {
   const router = useRouter();
-  const { signUp } = useAuth();
+  const { register: registerUser } = useAuth();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -103,7 +103,13 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      await signUp(data.email, data.password);
+      await registerUser({
+        name: data.fullName,
+        email: data.email,
+        password: data.password,
+        role: data.role,
+        institution: data.institution,
+      });
       toast.success("Account created successfully!", {
         icon: "🎉",
       });

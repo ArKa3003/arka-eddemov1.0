@@ -14,7 +14,7 @@ import {
   AuthForm,
   AuthError,
 } from "@/components/auth/auth-form";
-import { useAuth } from "@/providers/auth-provider";
+import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 
 /**

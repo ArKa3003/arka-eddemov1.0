@@ -18,7 +18,7 @@ import {
   AuthError,
 } from "@/components/auth/auth-form";
 import { SocialButtons } from "@/components/auth/social-buttons";
-import { useAuth } from "@/providers/auth-provider";
+import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 
@@ -39,7 +39,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { signIn } = useAuth();
+  const { login } = useAuth();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -65,7 +65,7 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      await signIn(data.email, data.password);
+      await login(data.email, data.password);
       toast.success("Welcome back!", {
         icon: "👋",
       });

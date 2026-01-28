@@ -123,6 +123,19 @@ function HeroSection() {
             <span>▷</span> Watch Demo
           </button>
         </div>
+
+        {/* Central ARKA logo to fill hero space */}
+        <div
+          className={`relative mx-auto mb-16 max-w-2xl w-full animate-smooth ${
+            heroInView ? "animate-fade-up animate-delay-500" : "opacity-0"
+          }`}
+        >
+          <img
+            src="/arka-logo.svg"
+            alt="ARKA-ED logo"
+            className="w-full h-auto mx-auto drop-shadow-2xl pointer-events-none select-none"
+          />
+        </div>
         
         {/* Statistics */}
         <div ref={statsRef} className="grid grid-cols-3 gap-8 max-w-3xl mx-auto">

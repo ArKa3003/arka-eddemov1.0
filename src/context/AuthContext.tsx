@@ -39,6 +39,10 @@ interface AuthContextType {
   register: (data: RegisterData) => Promise<void>
   logout: () => Promise<void>
   updateUser: (data: Partial<User>) => Promise<void>
+  /**
+   * Send a password reset email (no-op in demo mode)
+   */
+  resetPassword: (email: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -222,6 +226,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const resetPassword = async (email: string) => {
+    if (!IS_SUPABASE_CONFIGURED) {
+      toast.success('Password reset email would be sent in a live system. Demo mode only.')
+      return
+    }
+
+    try {
+      const { error } = await supabase!.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/update-password`,
+      })
+
+      if (error) throw error
+
+      toast.success('Password reset email sent. Please check your inbox.')
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to send reset email.')
+      throw error
+    }
+  }
+
   const updateUser = async (data: Partial<User>) => {
     if (!user) return
 
@@ -264,6 +288,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         register,
         logout,
         updateUser,
+        resetPassword,
       }}
     >
       {children}
