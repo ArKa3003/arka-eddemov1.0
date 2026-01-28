@@ -93,7 +93,7 @@ function HeroSection() {
       <div ref={heroRef} className="max-w-7xl mx-auto px-4 py-20 text-center">
         {/* Small badge / callout */}
         <div className={`inline-flex px-4 py-2 rounded-full bg-amber-500/20 border border-amber-400/30 mb-8 animate-smooth ${heroInView ? "animate-fade-up" : "opacity-0"}`}>
-          <span className="text-amber-200 text-sm font-medium">AIIE-POWERED IMAGING EDUCATION</span>
+          <span className="text-amber-200 text-sm font-medium">The Future of Medical Education</span>
         </div>
 
         {/* Main headline — large, bold, white, reference-style */}
@@ -236,7 +236,7 @@ export default function MarketingPage() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 border-b transition-all",
+          "fixed top-0 left-0 right-0 z-[100] border-b transition-all",
           isScrolled
             ? "glass-dark border-b-white/10 bg-primary-900/80 backdrop-blur-md"
             : "bg-primary-900/95"
@@ -245,7 +245,7 @@ export default function MarketingPage() {
         <div className="container mx-auto px-4 lg:px-6">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-1">
+            <Link href="/" className="flex items-center space-x-1 relative z-[60]">
               <span className="text-2xl font-bold text-accent-500">ARKA</span>
               <span className="text-2xl font-bold text-white">-ED</span>
             </Link>
