@@ -91,31 +91,28 @@ function HeroSection() {
     <section className="relative bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
       {/* Hero Content */}
       <div ref={heroRef} className="max-w-7xl mx-auto px-4 py-20 text-center">
-        {/* Badge */}
-        <div className={`inline-flex px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-8 animate-smooth ${heroInView ? "animate-fade-up" : "opacity-0"}`}>
-          <span className="text-cyan-400 text-sm font-medium">THE FUTURE OF MEDICAL EDUCATION</span>
+        {/* Small badge / callout */}
+        <div className={`inline-flex px-4 py-2 rounded-full bg-amber-500/20 border border-amber-400/30 mb-8 animate-smooth ${heroInView ? "animate-fade-up" : "opacity-0"}`}>
+          <span className="text-amber-200 text-sm font-medium">AIIE-POWERED IMAGING EDUCATION</span>
         </div>
-        
-        {/* Main Heading - Each word animated separately */}
-        <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
+
+        {/* Main headline — large, bold, white, reference-style */}
+        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-tight text-white mb-8 max-w-5xl mx-auto">
           <span className={`block animate-smooth ${heroInView ? "animate-fade-up animate-delay-100" : "opacity-0"}`}>
-            Master Medical
+            The future of
           </span>
           <span className={`block animate-smooth ${heroInView ? "animate-fade-up animate-delay-200" : "opacity-0"}`}>
-            Imaging
-          </span>
-          <span className={`block text-cyan-400 animate-smooth ${heroInView ? "animate-fade-up animate-delay-300" : "opacity-0"}`}>
-            Appropriateness
+            medical education
           </span>
         </h1>
-        
+
         {/* Subheading */}
-        <p className={`text-xl text-gray-300 max-w-2xl mx-auto mb-10 animate-smooth ${heroInView ? "animate-fade-up animate-delay-400" : "opacity-0"}`}>
+        <p className={`text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-10 animate-smooth ${heroInView ? "animate-fade-up animate-delay-300" : "opacity-0"}`}>
           The first interactive platform teaching physicians when to order imaging — powered by AIIE
         </p>
-        
+
         {/* CTA Buttons */}
-        <div className={`flex flex-wrap justify-center gap-4 mb-16 animate-smooth ${heroInView ? "animate-fade-up animate-delay-500" : "opacity-0"}`}>
+        <div className={`flex flex-wrap justify-center gap-4 mb-16 animate-smooth ${heroInView ? "animate-fade-up animate-delay-400" : "opacity-0"}`}>
           <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 rounded-lg font-semibold text-lg card-hover-smooth">
             Start Learning Free
           </button>
@@ -124,19 +121,6 @@ function HeroSection() {
           </button>
         </div>
 
-        {/* Central ARKA logo to fill hero space */}
-        <div
-          className={`relative mx-auto mb-16 max-w-2xl w-full animate-smooth ${
-            heroInView ? "animate-fade-up animate-delay-500" : "opacity-0"
-          }`}
-        >
-          <img
-            src="/arka-logo.svg"
-            alt="ARKA-ED logo"
-            className="w-full h-auto mx-auto drop-shadow-2xl pointer-events-none select-none"
-          />
-        </div>
-        
         {/* Statistics */}
         <div ref={statsRef} className="grid grid-cols-3 gap-8 max-w-3xl mx-auto">
           {[
