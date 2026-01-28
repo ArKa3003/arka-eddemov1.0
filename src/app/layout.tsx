@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/app/providers";
+import { DemoModeBanner } from "@/components/DemoModeBanner";
 
 // ============================================================================
 // Fonts
@@ -233,6 +234,7 @@ export default function RootLayout({
         <a href="#main-content" className="skip-to-content">
           Skip to main content
         </a>
+        <DemoModeBanner />
         <Providers>
           {children}
         </Providers>

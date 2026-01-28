@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, IS_SUPABASE_CONFIGURED } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 interface User {
@@ -24,6 +24,14 @@ interface RegisterData {
   institution?: string
 }
 
+const DEMO_USER: User = {
+  id: 'demo',
+  email: 'demo@arka-ed.com',
+  name: 'Demo User',
+  role: 'resident',
+  onboardingComplete: true,
+}
+
 interface AuthContextType {
   user: User | null
   isLoading: boolean
@@ -39,10 +47,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = IS_SUPABASE_CONFIGURED ? createClient() : null
 
-  // Load user profile from Supabase
+  // Load user profile from Supabase (only when configured)
   const loadUserProfile = async (supabaseUser: SupabaseUser) => {
+    if (!supabase) return null
     try {
       const { data: profile, error } = await supabase
         .from('profiles')
@@ -84,6 +93,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Initialize auth state
   useEffect(() => {
+    if (!IS_SUPABASE_CONFIGURED) {
+      console.warn('Supabase not configured — running in demo mode')
+      setUser(DEMO_USER)
+      setIsLoading(false)
+      return
+    }
+
+    if (!supabase) return
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
@@ -95,7 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         await loadUserProfile(session.user)
       } else {
@@ -110,9 +128,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string) => {
+    if (!IS_SUPABASE_CONFIGURED) {
+      toast.error('Demo mode — configure Supabase for real sign-in.')
+      return
+    }
     setIsLoading(true)
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase!.auth.signInWithPassword({
         email,
         password,
       })
@@ -132,9 +154,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const register = async (data: RegisterData) => {
+    if (!IS_SUPABASE_CONFIGURED) {
+      toast.error('Demo mode — configure Supabase for real registration.')
+      return
+    }
     setIsLoading(true)
     try {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      const { data: authData, error: authError } = await supabase!.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
@@ -150,7 +176,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (authData.user) {
         // Create profile
-        const { error: profileError } = await supabase
+        const { error: profileError } = await supabase!
           .from('profiles')
           .insert({
             id: authData.user.id,
@@ -177,10 +203,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = async () => {
+    if (!IS_SUPABASE_CONFIGURED) {
+      toast('Demo mode — you’re always signed in as the demo user.', {
+        icon: 'ℹ️',
+      })
+      return
+    }
     try {
-      const { error } = await supabase.auth.signOut()
+      const { error } = await supabase!.auth.signOut()
       if (error) throw error
-      
+
       setUser(null)
       toast.success('Logged out successfully')
       router.push('/login')
@@ -193,6 +225,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updateUser = async (data: Partial<User>) => {
     if (!user) return
 
+    if (!IS_SUPABASE_CONFIGURED) {
+      setUser({ ...user, ...data })
+      toast.success('Profile updated (demo mode — changes not persisted)')
+      return
+    }
+
     try {
       const updateData: any = {}
       if (data.name !== undefined) updateData.full_name = data.name
@@ -202,7 +240,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (data.trainingYear !== undefined) updateData.training_year = parseInt(data.trainingYear) || null
       if (data.onboardingComplete !== undefined) updateData.onboarding_completed = data.onboardingComplete
 
-      const { error } = await supabase
+      const { error } = await supabase!
         .from('profiles')
         .update(updateData as any as never)
         .eq('id', user.id)

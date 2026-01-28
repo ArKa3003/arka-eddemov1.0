@@ -4,6 +4,10 @@ import { updateSession } from "@/lib/supabase/middleware";
 import { createServerClient } from "@supabase/ssr";
 import type { Database } from "@/types/database";
 
+const IS_SUPABASE_CONFIGURED = !!(
+  process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
 /**
  * Route configuration for ARKA-ED
  */
@@ -85,6 +89,11 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/_next/") ||
     pathname.includes(".")
   ) {
+    return NextResponse.next();
+  }
+
+  // Demo mode: Supabase not configured — skip auth checks, allow all routes
+  if (!IS_SUPABASE_CONFIGURED) {
     return NextResponse.next();
   }
 

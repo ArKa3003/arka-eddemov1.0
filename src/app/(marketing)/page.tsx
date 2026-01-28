@@ -3,7 +3,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import {
   Play,
   Clipboard,
@@ -23,57 +22,163 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { DemoModal } from "@/components/DemoModal";
+import { AIIESection } from "@/components/AIIESection";
+import { CaseInterfaceCarousel } from "@/components/CaseInterfaceCarousel";
 import { Footer } from "@/components/layout/footer";
 import { cn } from "@/lib/utils";
 
-function useCountUp(target: number, isVisible: boolean, duration = 1200) {
-  const [value, setValue] = React.useState(0);
+// Intersection Observer hook for triggering animations on scroll
+function useInView(options = {}) {
+  const ref = React.useRef<HTMLDivElement | null>(null);
+  const [isInView, setIsInView] = React.useState(false);
 
   React.useEffect(() => {
-    if (!isVisible) return;
-    let start: number | null = null;
-    let rafId: number | null = null;
-
-    const step = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const progress = Math.min((timestamp - start) / duration, 1);
-      setValue(Math.floor(progress * target));
-      if (progress < 1) {
-        rafId = requestAnimationFrame(step);
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        observer.disconnect(); // Only trigger once
       }
-    };
+    }, { threshold: 0.1, ...options });
 
-    rafId = requestAnimationFrame(step);
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [target, isVisible, duration]);
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [options]);
 
-  return value;
+  return [ref, isInView] as const;
 }
 
-function AnimatedStat({
-  label,
-  value,
-  suffix,
-}: {
-  label: string;
-  value: number;
-  suffix?: string;
-}) {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
-  const count = useCountUp(value, inView, 1200);
+// Smooth counter animation hook
+function useCountUp(end: number, duration: number = 2000, startOnView: boolean = false, inView: boolean = true) {
+  const [count, setCount] = React.useState(0);
+  
+  React.useEffect(() => {
+    if (!inView && startOnView) return;
+    
+    let startTime: number;
+    let animationFrame: number;
+    
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      
+      // Ease out cubic for smooth deceleration
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(easeOut * end));
+      
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+    
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [end, duration, inView, startOnView]);
+  
+  return count;
+}
+
+function HeroSection() {
+  const [heroRef, heroInView] = useInView();
+  const [statsRef, statsInView] = useInView();
+  const [stepsRef, stepsInView] = useInView();
+  
+  // Animated counters
+  const knowledgeGap = useCountUp(30, 2000, true, statsInView);
+  const annualWaste = useCountUp(100, 2000, true, statsInView);
+  const clinicalCases = useCountUp(50, 2000, true, statsInView);
 
   return (
-    <div ref={ref} className="text-center">
-      <div className="text-3xl font-semibold text-white">
-        {count}
-        {suffix}
+    <section className="relative bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
+      {/* Hero Content */}
+      <div ref={heroRef} className="max-w-7xl mx-auto px-4 py-20 text-center">
+        {/* Badge */}
+        <div className={`inline-flex px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-8 animate-smooth ${heroInView ? "animate-fade-up" : "opacity-0"}`}>
+          <span className="text-cyan-400 text-sm font-medium">THE FUTURE OF MEDICAL EDUCATION</span>
+        </div>
+        
+        {/* Main Heading - Each word animated separately */}
+        <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
+          <span className={`block animate-smooth ${heroInView ? "animate-fade-up animate-delay-100" : "opacity-0"}`}>
+            Master Medical
+          </span>
+          <span className={`block animate-smooth ${heroInView ? "animate-fade-up animate-delay-200" : "opacity-0"}`}>
+            Imaging
+          </span>
+          <span className={`block text-cyan-400 animate-smooth ${heroInView ? "animate-fade-up animate-delay-300" : "opacity-0"}`}>
+            Appropriateness
+          </span>
+        </h1>
+        
+        {/* Subheading */}
+        <p className={`text-xl text-gray-300 max-w-2xl mx-auto mb-10 animate-smooth ${heroInView ? "animate-fade-up animate-delay-400" : "opacity-0"}`}>
+          The first interactive platform teaching physicians when to order imaging — powered by AIIE
+        </p>
+        
+        {/* CTA Buttons */}
+        <div className={`flex flex-wrap justify-center gap-4 mb-16 animate-smooth ${heroInView ? "animate-fade-up animate-delay-500" : "opacity-0"}`}>
+          <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 rounded-lg font-semibold text-lg card-hover-smooth">
+            Start Learning Free
+          </button>
+          <button className="px-8 py-4 bg-white/5 border border-white/10 rounded-lg font-semibold text-lg card-hover-smooth flex items-center gap-2">
+            <span>▷</span> Watch Demo
+          </button>
+        </div>
+        
+        {/* Statistics */}
+        <div ref={statsRef} className="grid grid-cols-3 gap-8 max-w-3xl mx-auto">
+          {[
+            { value: knowledgeGap, suffix: "%", label: "AIIE KNOWLEDGE GAP" },
+            { value: annualWaste, suffix: "B+", label: "ANNUAL WASTE" },
+            { value: clinicalCases, suffix: "+", label: "CLINICAL CASES" },
+          ].map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`animate-smooth ${statsInView ? "animate-counter" : "opacity-0"}`}
+              style={{ animationDelay: `${i * 0.15}s` }}
+            >
+              <div className="text-4xl md:text-5xl font-bold text-cyan-400">
+                {stat.value}
+                {stat.suffix}
+              </div>
+              <div className="text-sm text-gray-400 mt-2">{stat.label}</div>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="mt-1 text-xs uppercase tracking-widest text-white/60">
-        {label}
+      
+      {/* Evidence-driven learning steps */}
+      <div ref={stepsRef} id="how-it-works" className="bg-slate-800/50 py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className={`text-center mb-12 animate-smooth ${stepsInView ? "animate-fade-up" : "opacity-0"}`}>
+            <span className="inline-block px-3 py-1 bg-cyan-500/10 rounded-full text-cyan-400 text-sm mb-4">
+              HOW IT WORKS
+            </span>
+            <h2 className="text-3xl font-bold">Evidence-driven learning in four steps</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { icon: "📄", title: "Read the Case", desc: "Experience real patient presentations." },
+              { icon: "🔬", title: "Order Imaging", desc: "Select the right modality." },
+              { icon: "✓", title: "Get AIIE Feedback", desc: "See evidence-based ratings instantly." },
+              { icon: "💡", title: "Learn the Evidence", desc: "Connect guidelines to outcomes." },
+            ].map((step, i) => (
+              <div
+                key={step.title}
+                className={`bg-slate-700/50 rounded-xl p-6 card-hover-smooth animate-smooth ${
+                  stepsInView ? "animate-fade-up" : "opacity-0"
+                }`}
+                style={{ animationDelay: `${0.1 + i * 0.1}s` }}
+              >
+                <div className="text-3xl mb-4">{step.icon}</div>
+                <h3 className="text-cyan-400 font-semibold mb-2">{step.title}</h3>
+                <p className="text-gray-400 text-sm">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -127,8 +232,6 @@ export default function MarketingPage() {
     mouseY.set(y);
   };
 
-  const headlineWords = ["Master", "Medical", "Imaging", "Appropriateness"];
-
   return (
     <div className="bg-primary-900 text-white">
       {/* Navigation Bar (sticky) */}
@@ -157,6 +260,12 @@ export default function MarketingPage() {
                 className="text-sm font-medium text-white/80 hover:text-accent-300 transition-colors"
               >
                 How It Works
+              </Link>
+              <Link
+                href="#aiie"
+                className="text-sm font-medium text-white/80 hover:text-accent-300 transition-colors"
+              >
+                AIIE Technology
               </Link>
               <Link
                 href="#features"
@@ -230,6 +339,13 @@ export default function MarketingPage() {
                   How It Works
                 </Link>
                 <Link
+                  href="#aiie"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base font-medium text-white/80 hover:text-accent-300 transition-colors py-2"
+                >
+                  AIIE Technology
+                </Link>
+                <Link
                   href="#features"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-base font-medium text-white/80 hover:text-accent-300 transition-colors py-2"
@@ -269,130 +385,16 @@ export default function MarketingPage() {
         onMouseMove={handleMouseMove}
         aria-label="Hero section"
       >
-        <motion.div
-          className="absolute inset-0 opacity-60"
-          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at top left, rgba(6,182,212,0.25), transparent 55%), radial-gradient(circle at 20% 30%, rgba(148,163,184,0.2), transparent 60%), radial-gradient(circle at 80% 40%, rgba(6,182,212,0.15), transparent 55%), radial-gradient(circle at bottom right, rgba(15,23,42,0.9), transparent 70%)",
-            backgroundSize: "200% 200%",
-          }}
-          aria-hidden="true"
-        />
-
-        <div className="relative mx-auto flex min-h-[90vh] w-full max-w-6xl flex-col gap-8 sm:gap-12 px-4 sm:px-6 pb-16 sm:pb-24 pt-16 sm:pt-24 lg:flex-row lg:items-center">
-          <div className="flex-1 text-center lg:text-left">
-            <SectionBadge>The Future of Medical Education</SectionBadge>
-
-            <h1 className="mt-4 sm:mt-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
-              {headlineWords.map((word, index) => (
-                <motion.span
-                  key={word}
-                  className={cn(
-                    "mr-1 sm:mr-2 inline-block",
-                    word === "Appropriateness" &&
-                      "bg-gradient-to-r from-accent-400 via-accent-500 to-accent-300 bg-clip-text text-transparent"
-                  )}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </h1>
-
-            <p className="mt-4 sm:mt-6 max-w-xl mx-auto lg:mx-0 text-base sm:text-lg text-white/70">
-              The first interactive platform teaching physicians when to order
-              imaging — powered by AIIE
-            </p>
-
-            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-              <Button variant="secondary" size="lg" className="px-6 touch-target w-full sm:w-auto" asChild>
-                <Link href="/register" aria-label="Start learning for free">Start Learning Free</Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="px-6 text-white border-white/20 hover:bg-white/10 touch-target w-full sm:w-auto"
-                onClick={() => setShowDemo(true)}
-                aria-label="Watch demo video"
-              >
-                <Play className="mr-2 h-5 w-5" aria-hidden="true" />
-                Watch Demo
-              </Button>
-            </div>
-
-            <div className="mt-8 sm:mt-12 grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
-              <AnimatedStat label="AIIE Knowledge Gap" value={30} suffix="%" />
-              <AnimatedStat label="Annual Waste" value={100} suffix="B+" />
-              <AnimatedStat label="Clinical Cases" value={50} suffix="+" />
-            </div>
-          </div>
-
-          {/* Mockup */}
-          <motion.div
-            className="relative flex-1 mt-8 lg:mt-0"
-            style={{ x: parallaxX, y: parallaxY }}
-          >
-            <motion.div
-              className="absolute -top-6 left-4 sm:left-8 h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-accent-500/20 blur-2xl"
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 6, repeat: Infinity }}
-              aria-hidden="true"
-            />
-            <motion.div
-              className="absolute bottom-4 right-4 sm:right-10 h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-accent-500/20 blur-2xl"
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 7, repeat: Infinity }}
-              aria-hidden="true"
-            />
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 shadow-2xl backdrop-blur">
-              <div className="mb-4 flex items-center gap-2 sm:gap-3">
-                <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-accent-500" aria-hidden="true" />
-                <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-white/30" aria-hidden="true" />
-                <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-white/30" aria-hidden="true" />
-                <span className="ml-auto text-xs text-white/50">
-                  Case Interface Preview
-                </span>
-              </div>
-              <div className="space-y-3 sm:space-y-4">
-                <div className="rounded-lg border border-white/10 bg-white/10 p-3 sm:p-4">
-                  <p className="text-xs sm:text-sm uppercase text-white/50">
-                    Chief Complaint
-                  </p>
-                  <p className="mt-2 text-base sm:text-lg font-semibold">
-                    Sudden severe headache
-                  </p>
-                </div>
-                <div className="rounded-lg border border-white/10 bg-white/10 p-3 sm:p-4">
-                  <p className="text-xs sm:text-sm uppercase text-white/50">
-                    Recommended Imaging
-                  </p>
-                  <p className="mt-2 text-base sm:text-lg font-semibold text-accent-300">
-                    CT Head without contrast
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                  <div className="rounded-lg border border-white/10 bg-white/10 p-3 sm:p-4">
-                    <p className="text-xs text-white/50">AIIE Rating</p>
-                    <p className="mt-2 text-xl sm:text-2xl font-semibold text-appropriate-400">
-                      8
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-white/10 bg-white/10 p-3 sm:p-4">
-                    <p className="text-xs text-white/50">Radiation</p>
-                    <p className="mt-2 text-xl sm:text-2xl font-semibold text-white/80">
-                      2.1 mSv
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+        <HeroSection />
       </section>
+
+      {/* AIIE Technology Section */}
+      <AIIESection />
+
+      {/* Case Interface Preview (Interactive Carousel) */}
+      <div id="demo">
+        <CaseInterfaceCarousel />
+      </div>
 
       {/* Problem Section */}
       <section id="problem" className="bg-white text-primary-900">
@@ -472,61 +474,6 @@ export default function MarketingPage() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="bg-primary-950 text-white">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <div className="text-center">
-            <SectionBadge>How It Works</SectionBadge>
-            <h2 className="mt-4 text-3xl font-semibold md:text-4xl">
-              Evidence-driven learning in four steps
-            </h2>
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-4">
-            {[
-              {
-                title: "Read the Case",
-                description: "Experience real patient presentations.",
-                icon: Clipboard,
-              },
-              {
-                title: "Order Imaging",
-                description: "Select the right modality.",
-                icon: MousePointer2,
-              },
-              {
-                title: "Get AIIE Feedback",
-                description: "See evidence-based ratings instantly.",
-                icon: CheckCircle2,
-              },
-              {
-                title: "Learn the Evidence",
-                description: "Connect guidelines to outcomes.",
-                icon: Lightbulb,
-              },
-            ].map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <motion.div
-                  key={step.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  className="relative rounded-xl border border-white/10 bg-white/5 p-6"
-                >
-                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent-500/20 text-accent-300">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="text-lg font-semibold">{step.title}</h3>
-                  <p className="mt-2 text-sm text-white/70">
-                    {step.description}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* Features Section */}
       <section id="features" className="bg-white text-primary-900" aria-labelledby="features-heading">

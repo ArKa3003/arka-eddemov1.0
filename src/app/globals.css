@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "../styles/smooth-animations.css";
+
 @layer base {
   :root {
     /* Light theme colors - HSL format for Tailwind */
@@ -67,6 +69,8 @@
   
   * {
     @apply border-border;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
     @apply bg-background text-foreground;
