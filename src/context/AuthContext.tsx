@@ -53,15 +53,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error
 
       if (profile) {
+        const profileData = profile as {
+          id: string
+          email: string
+          full_name: string | null
+          role: 'student' | 'resident' | 'attending' | 'admin'
+          institution: string | null
+          specialty_track: string | null
+          training_year: number | null
+          onboarding_completed: boolean
+        }
         const userData: User = {
-          id: profile.id,
-          email: profile.email,
-          name: profile.name || supabaseUser.email?.split('@')[0] || 'User',
-          role: profile.role || 'student',
-          institution: profile.institution,
-          specialty: profile.specialty,
-          trainingYear: profile.training_year,
-          onboardingComplete: profile.onboarding_complete || false,
+          id: profileData.id,
+          email: profileData.email,
+          name: profileData.full_name || supabaseUser.email?.split('@')[0] || 'User',
+          role: profileData.role || 'student',
+          institution: profileData.institution || undefined,
+          specialty: profileData.specialty_track || undefined,
+          trainingYear: profileData.training_year?.toString() || undefined,
+          onboardingComplete: profileData.onboarding_completed || false,
         }
         setUser(userData)
         return userData
@@ -145,11 +155,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .insert({
             id: authData.user.id,
             email: data.email,
-            name: data.name,
+            full_name: data.name,
             role: data.role,
-            institution: data.institution,
-            onboarding_complete: false,
-          })
+            institution: data.institution || null,
+            onboarding_completed: false,
+          } as any)
 
         if (profileError) {
           console.error('Error creating profile:', profileError)
@@ -185,16 +195,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       const updateData: any = {}
-      if (data.name !== undefined) updateData.name = data.name
+      if (data.name !== undefined) updateData.full_name = data.name
       if (data.role !== undefined) updateData.role = data.role
       if (data.institution !== undefined) updateData.institution = data.institution
-      if (data.specialty !== undefined) updateData.specialty = data.specialty
-      if (data.trainingYear !== undefined) updateData.training_year = data.trainingYear
-      if (data.onboardingComplete !== undefined) updateData.onboarding_complete = data.onboardingComplete
+      if (data.specialty !== undefined) updateData.specialty_track = data.specialty
+      if (data.trainingYear !== undefined) updateData.training_year = parseInt(data.trainingYear) || null
+      if (data.onboardingComplete !== undefined) updateData.onboarding_completed = data.onboardingComplete
 
       const { error } = await supabase
         .from('profiles')
-        .update(updateData)
+        .update(updateData as any as never)
         .eq('id', user.id)
 
       if (error) throw error

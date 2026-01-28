@@ -50,7 +50,7 @@ export function HintPanel({
             <CardTitle className="text-lg font-semibold text-slate-900">
               Hints
             </CardTitle>
-            <Badge variant="outline" className="bg-white">
+            <Badge variant="default" outline className="bg-white">
               {hintsUsed}/{hints.length}
             </Badge>
           </div>
@@ -95,7 +95,7 @@ export function HintPanel({
                   </div>
                   <p className="text-sm text-slate-700 flex-1">{hint}</p>
                   {index === 0 && (
-                    <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                    <Badge variant="success" outline className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
                       Free
                     </Badge>
                   )}
@@ -120,14 +120,14 @@ export function HintPanel({
             {hintsUsed === 0 ? (
               <>
                 Use First Hint
-                <Badge variant="outline" className="ml-2 bg-emerald-50 text-emerald-700 border-emerald-200">
+                <Badge variant="success" outline className="ml-2 bg-emerald-50 text-emerald-700 border-emerald-200">
                   Free
                 </Badge>
               </>
             ) : (
               <>
                 Use Hint {hintsUsed + 1}
-                <Badge variant="outline" className="ml-2 bg-amber-50 text-amber-700 border-amber-300">
+                <Badge variant="warning" outline className="ml-2 bg-amber-50 text-amber-700 border-amber-300">
                   -{nextHintCost}%
                 </Badge>
               </>

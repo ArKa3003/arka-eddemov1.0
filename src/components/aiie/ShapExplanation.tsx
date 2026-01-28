@@ -76,7 +76,7 @@ export function ShapExplanation({
   })
 
   return (
-    <Card className={cn('w-full', className)} accent={result.category}>
+    <Card className={cn('w-full', className)} accent={result.category === 'uncertain' ? 'maybe' : result.category}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl font-semibold">
@@ -345,7 +345,7 @@ export function ShapExplanationCompact({
   const categoryData = getScoreCategory(result.finalScore)
 
   return (
-    <Card className={cn('w-full', className)} accent={result.category}>
+    <Card className={cn('w-full', className)} accent={result.category === 'uncertain' ? 'maybe' : result.category}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold">

@@ -221,16 +221,16 @@ export function AchievementToastContainer({ toasts, onDismiss }: {
   return (
     <>
       {toasts.map((toast, index) => (
-        <AchievementToast
-          key={toast.id}
-          title={toast.title}
-          description={toast.description}
-          icon={toast.icon}
-          showConfetti={toast.showConfetti}
-          className="mb-2"
-          style={{ bottom: `${4 + index * 120}px` }}
-          onDismiss={() => onDismiss(toast.id)}
-        />
+        <div key={toast.id} style={{ position: 'fixed', bottom: `${4 + index * 120}px`, left: '1rem', right: '1rem', zIndex: 50 }}>
+          <AchievementToast
+            title={toast.title}
+            description={toast.description}
+            icon={toast.icon}
+            showConfetti={toast.showConfetti}
+            className="mb-2"
+            onDismiss={() => onDismiss(toast.id)}
+          />
+        </div>
       ))}
     </>
   )

@@ -58,7 +58,9 @@ export function FormErrorHandler<T extends Record<string, any>>({
 
   // Get error messages
   const errorMessages = errorEntries.map(([field, error]) => {
-    const message = error?.message || 'This field has an error'
+    const message = error && typeof error === 'object' && 'message' in error 
+      ? String(error.message) 
+      : 'This field has an error'
     return { field, message }
   })
 

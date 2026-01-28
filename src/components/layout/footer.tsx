@@ -108,9 +108,9 @@ export function Footer() {
           {(isOpen || !isMobile) && (
             <motion.ul
               id={`footer-section-${sectionKey}`}
-              initial={isMobile ? { height: 0, opacity: 0 } : false}
-              animate={isMobile ? { height: "auto", opacity: 1 } : false}
-              exit={isMobile ? { height: 0, opacity: 0 } : false}
+              initial={isMobile ? { height: 0, opacity: 0 } : undefined}
+              animate={isMobile ? { height: "auto", opacity: 1 } : undefined}
+              exit={isMobile ? { height: 0, opacity: 0 } : undefined}
               transition={{
                 duration: isReducedMotion ? 0.1 : 0.3,
                 ease: "easeInOut",

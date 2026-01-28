@@ -158,16 +158,20 @@ export async function submitCaseAttempt(
   }
 
   const { data, error } = await supabase
-    .from('case_attempts')
+    .from('user_case_attempts')
     .insert({
       user_id: user.id,
       case_id: caseId,
-      selected_option: selectedOption,
+      selected_imaging: Array.isArray(selectedOption) ? selectedOption : [selectedOption],
       score,
-      time_taken: timeTaken,
+      time_spent_seconds: timeTaken,
       hints_used: hintsUsed,
-      mode,
-    })
+      mode: mode === 'learning' ? 'practice' : 'assessment',
+      is_correct: score >= 70,
+      feedback_viewed: false,
+      assessment_id: null,
+      acr_rating_received: null,
+    } as any)
     .select()
     .single()
 
@@ -197,7 +201,7 @@ export async function getUserProgress(userId?: string) {
 
   // Get case attempts
   const { data: attempts, error: attemptsError } = await supabase
-    .from('case_attempts')
+    .from('user_case_attempts')
     .select(`
       *,
       cases (
@@ -319,13 +323,16 @@ export async function startAssessmentAttempt(assessmentId: string) {
   }
 
   const { data, error } = await supabase
-    .from('assessment_attempts')
+    .from('user_assessments')
     .insert({
       user_id: user.id,
       assessment_id: assessmentId,
       started_at: new Date().toISOString(),
+      status: 'in_progress',
+      current_case_index: 0,
       answers: [],
-    })
+      time_remaining_seconds: null,
+    } as any)
     .select()
     .single()
 
@@ -354,13 +361,15 @@ export async function submitAssessmentAttempt(
   }
 
   const { data, error } = await supabase
-    .from('assessment_attempts')
+    .from('user_assessments')
     .update({
       completed_at: new Date().toISOString(),
+      status: 'completed',
       answers,
       score,
-      time_used: timeUsed,
-    })
+      passed: score >= 70,
+      time_remaining_seconds: null,
+    } as any as never)
     .eq('id', attemptId)
     .eq('user_id', user.id)
     .select()
@@ -386,13 +395,12 @@ export async function getUserAssessmentAttempts(assessmentId?: string) {
   }
 
   let query = supabase
-    .from('assessment_attempts')
+    .from('user_assessments')
     .select(`
       *,
       assessments (
         id,
-        name,
-        type,
+        title,
         description
       )
     `)

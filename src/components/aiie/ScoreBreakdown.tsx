@@ -94,7 +94,7 @@ export function ScoreBreakdown({
   }
 
   const content = (
-    <Card className={cn('w-full', className)} accent={result.category}>
+    <Card className={cn('w-full', className)} accent={result.category === 'uncertain' ? 'maybe' : result.category}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl font-semibold">
