@@ -20,17 +20,20 @@
 }
 
 .animate-fade-up {
-  animation: fadeUpSmooth 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  /* both = apply 0% keyframe during delay, 100% keyframe after (stay visible) */
+  animation: fadeUpSmooth 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
   will-change: transform, opacity;
 }
 
-/* Staggered delays for sequential elements */
-.animate-delay-100 { animation-delay: 0.1s; opacity: 0; }
-.animate-delay-200 { animation-delay: 0.2s; opacity: 0; }
-.animate-delay-300 { animation-delay: 0.3s; opacity: 0; }
-.animate-delay-400 { animation-delay: 0.4s; opacity: 0; }
-.animate-delay-500 { animation-delay: 0.5s; opacity: 0; }
-.animate-delay-600 { animation-delay: 0.6s; opacity: 0; }
+/* Staggered delays for sequential elements. No opacity:0 here — it overrides
+   the animation's end state and keeps text invisible. fill-mode: both handles
+   initial visibility via keyframes. */
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+.animate-delay-600 { animation-delay: 0.6s; }
 
 /* Counter number animation */
 @keyframes countFadeIn {

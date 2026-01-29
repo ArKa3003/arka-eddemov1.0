@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useInView } from "framer-motion";
 import {
   Play,
   Clipboard,
@@ -26,26 +26,6 @@ import { AIIESection } from "@/components/AIIESection";
 import { CaseInterfaceCarousel } from "@/components/CaseInterfaceCarousel";
 import { Footer } from "@/components/layout/footer";
 import { cn } from "@/lib/utils";
-
-// Intersection Observer hook for triggering animations on scroll
-function useInView(options = {}) {
-  const ref = React.useRef<HTMLDivElement | null>(null);
-  const [isInView, setIsInView] = React.useState(false);
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsInView(true);
-        observer.disconnect(); // Only trigger once
-      }
-    }, { threshold: 0.1, ...options });
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [options]);
-
-  return [ref, isInView] as const;
-}
 
 // Smooth counter animation hook
 function useCountUp(end: number, duration: number = 2000, startOnView: boolean = false, inView: boolean = true) {
@@ -78,9 +58,12 @@ function useCountUp(end: number, duration: number = 2000, startOnView: boolean =
 }
 
 function HeroSection() {
-  const [heroRef, heroInView] = useInView();
-  const [statsRef, statsInView] = useInView();
-  const [stepsRef, stepsInView] = useInView();
+  const heroRef = React.useRef<HTMLDivElement>(null);
+  const statsRef = React.useRef<HTMLDivElement>(null);
+  const stepsRef = React.useRef<HTMLDivElement>(null);
+  const heroInView = useInView(heroRef, { once: true, amount: 0.1 });
+  const statsInView = useInView(statsRef, { once: true, amount: 0.1 });
+  const stepsInView = useInView(stepsRef, { once: true, amount: 0.1 });
   
   // Animated counters
   const knowledgeGap = useCountUp(30, 2000, true, statsInView);
@@ -99,10 +82,10 @@ function HeroSection() {
         {/* Main headline — large, bold, white, reference-style */}
         <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-tight text-white mb-8 max-w-5xl mx-auto">
           <span className={`block animate-smooth ${heroInView ? "animate-fade-up animate-delay-100" : "opacity-0"}`}>
-            The future of
+            The Future of
           </span>
           <span className={`block animate-smooth ${heroInView ? "animate-fade-up animate-delay-200" : "opacity-0"}`}>
-            medical education
+            Medical Education
           </span>
         </h1>
 
@@ -112,13 +95,27 @@ function HeroSection() {
         </p>
 
         {/* CTA Buttons */}
-        <div className={`flex flex-wrap justify-center gap-4 mb-16 animate-smooth ${heroInView ? "animate-fade-up animate-delay-400" : "opacity-0"}`}>
+        <div className={`flex flex-wrap justify-center gap-4 mb-12 animate-smooth ${heroInView ? "animate-fade-up animate-delay-400" : "opacity-0"}`}>
           <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 rounded-lg font-semibold text-lg card-hover-smooth">
             Start Learning Free
           </button>
           <button className="px-8 py-4 bg-white/5 border border-white/10 rounded-lg font-semibold text-lg card-hover-smooth flex items-center gap-2">
             <span>▷</span> Watch Demo
           </button>
+        </div>
+
+        {/* Main hero image */}
+        <div className={`mx-auto max-w-4xl px-4 mb-16 animate-smooth ${heroInView ? "animate-fade-up animate-delay-500" : "opacity-0"}`}>
+          <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-cyan-500/10">
+            <img
+              src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&q=80"
+              alt="Medical imaging education – physicians learning when to order imaging"
+              className="w-full h-auto object-cover"
+              width={1200}
+              height={675}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none" />
+          </div>
         </div>
 
         {/* Statistics */}
